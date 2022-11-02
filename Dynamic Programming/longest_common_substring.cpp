@@ -33,9 +33,9 @@ int main()
 #endif
 
 	string x, y;
-
 	cin >> x;
-	cin >> y;
+	y = string(x.rbegin(), x.rend());
+
 
 	cout << lcs(x, y);
 
