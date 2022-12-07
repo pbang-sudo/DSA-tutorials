@@ -75,33 +75,26 @@ Node* buildTree(string str) {
     return root;
 }
 
-vector<int> verticalOrder(Node *root) {
-    map<int, map<int, vector<int>>> nodes;
-    queue<pair<Node*, pair<int, int>>> q;
+vector<int> bottomView(Node* root) {
     vector<int> ans;
-    
     if(root == NULL) return ans;
-    q.push(make_pair(root, make_pair(0, 0)));
+    
+    map<int, int> bottomNode;
+    queue<pair<Node*, int>> q;
+    q.push({root, 0});
     while(!q.empty()) {
         auto x = q.front();
         q.pop();
-        Node *temp = x.first;
-        int hd = x.second.first;
-        int level = x.second.second;
-        nodes[hd][level].push_back(temp->data);
+        Node* temp = x.first;
+        int hd = x.second;
+        bottomNode[hd] = temp->data;
         
-        if(temp->left) q.push(make_pair(temp->left, make_pair(hd - 1, level + 1)));
-        if(temp->right) q.push(make_pair(temp->right, make_pair(hd + 1, level + 1)));
+        if(temp->left) q.push({temp->left, hd - 1});
+        if(temp->right) q.push({temp->right, hd + 1});
     }
     
-    for(auto i : nodes) {
-        for(auto j : i.second) {
-            for(auto k : j.second) {
-                ans.push_back(k);
-            }
-        }
-    }
-
+    for(auto i : bottomNode)
+        ans.push_back(i.second);
     return ans;
 }
 
@@ -114,7 +107,7 @@ int main() {
     string str;
     getline(cin, str);
     Node *root = buildTree(str);
-    vector<int> ans = verticalOrder(root);
+    vector<int> ans = bottomView(root);
     for(unsigned int i = 0; i < ans.size(); i++)
         cout << ans[i] << " ";
 
